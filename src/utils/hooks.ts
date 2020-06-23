@@ -29,10 +29,10 @@ export function getTableData(ctx: SetupContext) {
 		},
 	});
 	const labelList = computed(() =>
-		currentConfig.value.config.map((item) => item.label)
+		currentConfig.value.config.filter(item => item.able).map((item) => item.label)
 	);
 	const columns = computed(() => {
-		let result = currentConfig.value.config.map((item) => formColumns(item));
+		let result = currentConfig.value.config.filter(item => item.able).map((item) => formColumns(item));
 		if (currentConfig.value.index) {
 			result = [
 				{

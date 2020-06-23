@@ -11,7 +11,7 @@ import { Config, mergeOptions } from "./utils/type";
 
 Vue.config.productionTip = false;
 
-class EasyTable {
+class Matable {
 	vue = Vue;
 	VERSION = "1.2.6";
 	options: Config[] = [];
@@ -48,8 +48,8 @@ class EasyTable {
 	}
 }
 
-export const init = () => new EasyTable();
+export const init = () => new Matable();
 
 if (process.env.NODE_ENV === "development") {
-	(window as any).EasyTable = { init };
+	(window as any).Matable = { init };
 }
