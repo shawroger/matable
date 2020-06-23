@@ -28,7 +28,7 @@ export default defineComponent({
 #app-footer {
 	text-align: center;
 	color: gray;
-	padding: 20px;
+	padding: 10px;
 
 	a {
 		color: grey;

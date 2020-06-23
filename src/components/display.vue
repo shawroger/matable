@@ -35,7 +35,7 @@
 								></mu-option>
 							</mu-select>
 						</template>
-						
+
 						<mu-card-actions>
 							<mu-button @click="resetSearchMode">重置</mu-button>
 						</mu-card-actions>
@@ -117,14 +117,14 @@ export default defineComponent({
 				let result = tableData.value;
 
 				searchMode.forEach((item) => {
-					if (item.mode === null || item.val === "") return;
+					if (item.mode === null || item.val.length === 0) return;
 					if (item.equal) {
 						result = result.filter(
-							(val) => String(val[item.name]) === String(item.val)
+							(val) => String(val[item.name].trim()) === String(item.val)
 						);
 					} else {
 						result = result.filter((val) =>
-							String(val[item.name]).includes(String(item.val))
+							String(val[item.name].trim()).includes(String(item.val))
 						);
 					}
 				});
@@ -142,8 +142,14 @@ export default defineComponent({
 		function sortData(params: { name: string; order: "asc" | "desc" }) {
 			const { name, order } = params;
 
-			pageData.value = pageData.value.sort((a: any, b: any) =>
-				order === "asc" ? a[name] - b[name] : b[name] - a[name]
+			const safeCompare = (a: number | string, b: number | string) =>
+				isNaN(Number(a))
+					? a.toString().length - b.toString().length
+					: Number(a) - Number(b);
+
+			pageData.value = pageData.value.sort(
+				(a: any, b: any) =>
+					(order === "asc" ? 1 : -1) * safeCompare(a[name], b[name])
 			);
 		}
 
@@ -153,7 +159,7 @@ export default defineComponent({
 			});
 			page.value = 1;
 		}
-		
+
 		return {
 			page,
 			pageData,
