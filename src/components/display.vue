@@ -2,8 +2,15 @@
 	<div id="home-display">
 		<mu-container>
 			<mu-card>
-				<mu-expansion-panel :zDepth="0" @change="isSearch = !isSearch">
-					<div slot="header">切换{{ isSearch ? "数据" : "检索" }}</div>
+				<mu-expansion-panel
+					:zDepth="0"
+					@change="isSearch = !isSearch"
+					:expand="isSearch"
+				>
+					<div slot="header">
+						{{ isSearch ? currentConfig.title : "开始检索" }}
+					</div>
+					
 					<div class="search-cols">
 						<template v-for="item in searchMode">
 							<mu-text-field
@@ -16,7 +23,11 @@
 										'中检索 ' +
 										(item.equal ? '（全字匹配）' : '（部分匹配）')
 								"
-							></mu-text-field>
+							>
+								<template #append v-if="item.val.length > 0">
+									<span class="clear-text" @click="item.val = ''">✖</span>
+								</template>
+							</mu-text-field>
 
 							<mu-select
 								v-if="item.isSelect"
@@ -36,11 +47,15 @@
 							</mu-select>
 						</template>
 
-						<mu-card-actions>
+						<mu-card-actions style="width: 100%">
 							<mu-button @click="resetSearchMode">重置</mu-button>
+
+							<mu-button @click="isSearch = false">确定</mu-button>
 						</mu-card-actions>
 					</div>
 				</mu-expansion-panel>
+
+				
 				<template v-if="!isSearch">
 					<mu-divider></mu-divider>
 					<mu-data-table
@@ -98,6 +113,7 @@ export default defineComponent({
 	setup(props, ctx) {
 		const page = ref(1);
 		const isSearch = ref(false);
+
 		const pageCount = computed(() =>
 			Math.ceil(pageData.value.length / 10) > 0
 				? Math.ceil(pageData.value.length / 10)
@@ -116,18 +132,23 @@ export default defineComponent({
 			get: () => {
 				let result = tableData.value;
 
-				searchMode.forEach((item) => {
-					if (item.mode === null || item.val.length === 0) return;
-					if (item.equal) {
-						result = result.filter(
-							(val) => String(val[item.name].trim()) === String(item.val)
-						);
-					} else {
-						result = result.filter((val) =>
-							String(val[item.name].trim()).includes(String(item.val))
-						);
+				for (let item of searchMode.value) {
+					if (
+						item.mode === null ||
+						typeof item.val === "undefined" ||
+						item.val.length === 0
+					) {
+						continue;
 					}
-				});
+
+					result = item.equal
+						? result.filter(
+								(val) => String(val[item.name].trim()) === String(item.val)
+						  )
+						: result.filter((val) =>
+								String(val[item.name].trim()).includes(String(item.val))
+						  );
+				}
 				return result;
 			},
 			set: (val) => val,
@@ -154,7 +175,7 @@ export default defineComponent({
 		}
 
 		function resetSearchMode() {
-			searchMode.forEach((item) => {
+			searchMode.value.forEach((item) => {
 				item.val = "";
 			});
 			page.value = 1;
@@ -226,6 +247,10 @@ export default defineComponent({
 
 	.mu-table {
 		width: 100%;
+	}
+
+	.clear-text {
+		cursor: pointer;
 	}
 }
 </style>

@@ -33,9 +33,12 @@ const router = new VueRouter({
 	routes,
 });
 
-router.beforeEach((to, _from, next) => {
-	if (typeof to.query.index !== "undefined") {
-		store.state.index = Number(to.query.index);
+router.beforeEach((to, from, next) => {
+	const index = Number(to.query.index);
+	if (0 <= index && index < store.state.config.length) {
+		store.state.index = index;
+	} else {
+		store.state.index = 0;
 	}
 	next();
 });

@@ -1,4 +1,4 @@
-import { computed, SetupContext, reactive } from "@vue/composition-api";
+import { computed, SetupContext, ref } from "@vue/composition-api";
 import { IStore } from "../store";
 import { formColumns, formModes } from "./format";
 
@@ -48,7 +48,7 @@ export function getTableData(ctx: SetupContext) {
 		return result;
 	});
 
-	const searchMode = reactive(formModes(currentConfig.value.config));
+	const searchMode = ref(formModes(currentConfig.value.config));
 
 	return {
 		columns,

@@ -1,13 +1,29 @@
 <template>
 	<div id="show-list">
 		<mu-container>
+			<mu-card class="input-text">
+				<mu-auto-complete
+					:data="searchName"
+					v-model="text"
+					placeholder="搜素数据表名称"
+				>
+					<template #append v-if="text.length > 0">
+						<span class="clear-text" @click="text = ''">✖</span>
+					</template>
+				</mu-auto-complete>
+			</mu-card></mu-container
+		>
+
+		<div class="card-divide"></div>
+
+		<mu-container>
 			<mu-card>
 				<mu-card-title title="所有数据列表"></mu-card-title>
 				<mu-divider></mu-divider>
 				<mu-list>
 					<mu-list-item
 						button
-						v-for="(item, index) in config"
+						v-for="(item, index) in searchResult"
 						:key="item.data"
 						:to="{ name: 'home', query: { index } }"
 					>
@@ -15,6 +31,14 @@
 							<mu-icon value="grade"></mu-icon>
 						</mu-list-item-action>
 						<mu-list-item-title>{{ item.title }}</mu-list-item-title>
+						<mu-list-item-action>
+							<mu-list-item-after-text
+								>{{
+									$store.state.data[index] ? $store.state.data[index].length : '??'
+								}}
+								列</mu-list-item-after-text
+							>
+						</mu-list-item-action>
 					</mu-list-item>
 				</mu-list></mu-card
 			>
@@ -23,15 +47,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, ref, computed } from "@vue/composition-api";
 import { getCurrentConfig } from "../utils/hooks";
 
 export default defineComponent({
 	name: "show-list",
 	setup(props, ctx) {
+		const text = ref("");
 		const { config } = getCurrentConfig(ctx);
+		const searchName = computed(() => config.value.map((item) => item.title));
+		const searchResult = computed(() =>
+			config.value.filter((item) => item.title.startsWith(text.value))
+		);
+
 		return {
-			config
+			text,
+			searchName,
+			searchResult,
 		};
 	},
 });
@@ -51,6 +83,10 @@ export default defineComponent({
 
 	.mu-card-title {
 		text-align: center;
+	}
+
+	.clear-text {
+		cursor: pointer;
 	}
 
 	.input-text {
