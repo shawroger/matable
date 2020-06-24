@@ -16,7 +16,7 @@ class Matable {
 	VERSION = "1.2.6";
 	options: Config[] = [];
 
-	constructor() {}
+	constructor(public globalConfig?: { title?: string; countdown?: string[] }) {}
 
 	/**
 	 * @param config 用户的配置
@@ -38,6 +38,10 @@ class Matable {
 		 * 在 vuex 中混入配置数据
 		 */
 		store.state.config = this.options;
+		store.state.globalConfig = {
+			...store.state.globalConfig,
+			...this.globalConfig,
+		};
 		new this.vue({
 			store,
 			router,
@@ -48,7 +52,8 @@ class Matable {
 	}
 }
 
-export const init = () => new Matable();
+export const init = (globalConfig?: { title?: string; countdown?: string[] }) =>
+	new Matable(globalConfig);
 
 if (process.env.NODE_ENV === "development") {
 	(window as any).Matable = { init };

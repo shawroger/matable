@@ -10,7 +10,7 @@
 					<div slot="header">
 						{{ isSearch ? currentConfig.title : "开始检索" }}
 					</div>
-					
+
 					<div class="search-cols">
 						<template v-for="item in searchMode">
 							<mu-text-field
@@ -55,44 +55,44 @@
 					</div>
 				</mu-expansion-panel>
 
-				
-				<template v-if="!isSearch">
-					<mu-divider></mu-divider>
-					<mu-data-table
-						:columns="columns"
-						:data="pageData.slice(page * 10 - 10, page * 10)"
-						:sort.sync="sortTemp"
-						@sort-change="sortData"
-					>
-						<template #default="scope">
-							<td v-if="currentConfig.index" class="is-center">
-								{{ scope.$index + page * 10 - 9 }}
-							</td>
-							<td v-for="item in labelList" :key="item" class="is-center">
-								{{ scope.row[item] }}
-							</td>
-						</template>
-					</mu-data-table>
-					<div class="page-slider">
-						<mu-slider
-							:step="1"
-							:min="1"
-							:max="pageCount"
-							v-model="page"
-						></mu-slider>
-					</div>
-					<mu-card-actions>
-						<mu-button flat :disabled="page <= 1" @click="page = page - 1"
-							><mu-icon value="arrow_back"></mu-icon
-						></mu-button>
-						<p>{{ page }} / {{ pageCount }}</p>
-						<mu-button
-							flat
-							:disabled="page >= pageCount"
-							@click="page = page + 1"
-							><mu-icon value="arrow_forward"></mu-icon
-						></mu-button>
-					</mu-card-actions> </template></mu-card
+				<mu-scale-transition>
+					<div v-if="!isSearch">
+						<mu-divider></mu-divider>
+						<mu-data-table
+							:columns="columns"
+							:data="pageData.slice(page * 10 - 10, page * 10)"
+							:sort.sync="sortTemp"
+							@sort-change="sortData"
+						>
+							<template #default="scope">
+								<td v-if="currentConfig.index" class="is-center">
+									{{ scope.$index + page * 10 - 9 }}
+								</td>
+								<td v-for="item in labelList" :key="item" class="is-center">
+									{{ scope.row[item] }}
+								</td>
+							</template>
+						</mu-data-table>
+						<div class="page-slider">
+							<mu-slider
+								:step="1"
+								:min="1"
+								:max="pageCount"
+								v-model="page"
+							></mu-slider>
+						</div>
+						<mu-card-actions>
+							<mu-button flat :disabled="page <= 1" @click="page = page - 1"
+								><mu-icon value="arrow_back"></mu-icon
+							></mu-button>
+							<p>{{ page }} / {{ pageCount }}</p>
+							<mu-button
+								flat
+								:disabled="page >= pageCount"
+								@click="page = page + 1"
+								><mu-icon value="arrow_forward"></mu-icon
+							></mu-button>
+						</mu-card-actions> </div></mu-scale-transition></mu-card
 		></mu-container>
 	</div>
 </template>
@@ -180,6 +180,11 @@ export default defineComponent({
 			});
 			page.value = 1;
 		}
+
+		document.title =
+			ctx.root.$store.state.globalConfig.title +
+			" | " +
+			currentConfig.value.title;
 
 		return {
 			page,

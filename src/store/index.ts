@@ -9,10 +9,17 @@ type ITableData = Array<{ [p: string]: string }>;
 
 export interface IStore {
 	data: {
-		[p: string]: ITableData
+		[p: string]: ITableData;
 	};
 	config: Config[];
 	index: number;
+	globalConfig: {
+		title?: string;
+		countdown?: {
+			name: string,
+			date: string
+		}[];
+	};
 }
 
 export default new Vuex.Store<IStore>({
@@ -20,6 +27,10 @@ export default new Vuex.Store<IStore>({
 		data: {},
 		config: [],
 		index: 0,
+		globalConfig: {
+			title: document.title,
+			countdown: [],
+		},
 	},
 	actions: {},
 	modules: {},

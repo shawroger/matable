@@ -23,9 +23,9 @@
 				<mu-list>
 					<mu-list-item
 						button
-						v-for="(item, index) in searchResult"
+						v-for="item in searchResult"
 						:key="item.data"
-						:to="{ name: 'home', query: { index } }"
+						:to="{ name: 'home', query: { index: item.$index } }"
 					>
 						<mu-list-item-action>
 							<mu-icon value="grade"></mu-icon>
@@ -34,7 +34,9 @@
 						<mu-list-item-action>
 							<mu-list-item-after-text
 								>{{
-									$store.state.data[index] ? $store.state.data[index].length : '??'
+									$store.state.data[item.$index]
+										? $store.state.data[item.$index].length
+										: "??"
 								}}
 								列</mu-list-item-after-text
 							>
@@ -57,8 +59,12 @@ export default defineComponent({
 		const { config } = getCurrentConfig(ctx);
 		const searchName = computed(() => config.value.map((item) => item.title));
 		const searchResult = computed(() =>
-			config.value.filter((item) => item.title.startsWith(text.value))
+			config.value
+				.map((item, index) => ({ ...item, $index: index }))
+				.filter((item) => item.title.startsWith(text.value))
 		);
+
+		document.title = ctx.root.$store.state.globalConfig.title;
 
 		return {
 			text,

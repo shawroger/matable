@@ -1,17 +1,17 @@
 <template>
-	<div id="view-voca">
-		<show-list></show-list>
+	<div id="view-count-down">
+       <count-down-show></count-down-show>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
+import countDownShow from "../components/count-down.vue";
 
-import showList from "../components/list.vue";
 export default defineComponent({
-	name: "view-list",
+	name: "view-count-down",
 	components: {
-		showList,
+		countDownShow
 	},
 });
 </script>

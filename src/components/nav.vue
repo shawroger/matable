@@ -7,14 +7,14 @@
 			<mu-button icon slot="left" @click="open = !open">
 				<mu-icon :value="open ? 'close' : 'menu'"></mu-icon>
 			</mu-button>
-			{{ currentConfig.title }}
+			{{ $store.state.globalConfig.title }}
 		</mu-appbar>
 		<mu-drawer :open.sync="open" v-clickoutside="clickOutside">
 			<mu-list @click="open = false">
 				<mu-list-item
 					button
 					:to="{ name: item.name, query: { index } }"
-					v-for="item in routes"
+					v-for="item in routes.filter(v => !v.meta.hide)"
 					:key="item.name"
 					:exact="false"
 					:class="[$route.name === item.name ? 'link-active' : '']"

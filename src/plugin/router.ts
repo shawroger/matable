@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import viewHome from "../views/home.vue";
 import viewList from "../views/list.vue";
+import viewCountDown from "../views/count-down.vue";
 
 import store from "../store";
 
@@ -24,6 +25,22 @@ export const routes = [
 		meta: {
 			name: "清单",
 			icon: "assignment",
+		},
+	},
+	{
+		path: "/count-down",
+		name: "count-down",
+		component: viewCountDown,
+		meta: {
+			name: "倒计时",
+			icon: "schedule",
+		},
+	},
+	{
+		path: "**",
+		redirect: '/',
+		meta: {
+			hide: true
 		},
 	},
 ];
