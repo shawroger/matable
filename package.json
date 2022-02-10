@@ -22,7 +22,7 @@
 		"@vue/composition-api": "^0.6.5",
 		"axios": "^0.19.2",
 		"fs-extra": "^9.0.1",
-		"node-sass": "^4.12.0",
+		"node-sass": "^7.0.0",
 		"rexine": "^2.3.0",
 		"sass-loader": "^8.0.2",
 		"typescript": "~3.9.3",
